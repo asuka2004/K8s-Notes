@@ -1,6 +1,7 @@
 K8s二進制安裝
 
-各個節點IP角色k8-1 192.168.88.91  etcd+apiserver+controller-manager+scheduler+kubelet+kube-proxy
+各個節點IP角色
+k8-1 192.168.88.91  etcd+apiserver+controller-manager+scheduler+kubelet+kube-proxy
 
 k8-2 192.168.88.92  etcd+apiserver+controller-manager+scheduler+kubelet+kube-proxy
 
