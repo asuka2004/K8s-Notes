@@ -1,0 +1,14 @@
+[Unit]
+Description=Kubernetes Scheduler
+After=kube-apiserver.service
+
+[Service]
+ExecStart=/usr/local/bin/kube-scheduler \
+  --kubeconfig=/etc/kubernetes/scheduler.kubeconfig \
+  --leader-elect=true \
+  --v=2
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

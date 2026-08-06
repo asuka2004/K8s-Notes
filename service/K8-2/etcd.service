@@ -1,0 +1,31 @@
+[Unit]
+Description=etcd
+Documentation=https://github.com/etcd-io/etcd
+After=network.target
+
+[Service]
+Type=notify
+ExecStart=/usr/local/bin/etcd \
+  --name=k8-2 \
+  --data-dir=/var/lib/etcd \
+  --cert-file=/etc/etcd/ssl/etcd.pem \
+  --key-file=/etc/etcd/ssl/etcd-key.pem \
+  --trusted-ca-file=/etc/etcd/ssl/ca.pem \
+  --peer-cert-file=/etc/etcd/ssl/etcd.pem \
+  --peer-key-file=/etc/etcd/ssl/etcd-key.pem \
+  --peer-trusted-ca-file=/etc/etcd/ssl/ca.pem \
+  --peer-client-cert-auth \
+  --client-cert-auth \
+  --listen-peer-urls=https://192.168.88.92:2380 \
+  --listen-client-urls=https://192.168.88.92:2379,https://127.0.0.1:2379 \
+  --advertise-client-urls=https://192.168.88.92:2379 \
+  --initial-advertise-peer-urls=https://192.168.88.92:2380 \
+  --initial-cluster=k8-1=https://192.168.88.91:2380,k8-2=https://192.168.88.92:2380,k8-3=https://192.168.88.93:2380 \
+  --initial-cluster-token=k8s-etcd-cluster \
+  --initial-cluster-state=new
+Restart=on-failure
+RestartSec=5
+LimitNOFILE=65536
+
+[Install]
+WantedBy=multi-user.target

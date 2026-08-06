@@ -1,0 +1,44 @@
+[Unit]
+Description=Kubernetes API Server
+After=network.target etcd.service
+
+[Service]
+ExecStart=/usr/local/bin/kube-apiserver \
+  --advertise-address=192.168.88.92 \
+  --bind-address=0.0.0.0 \
+  --secure-port=6443 \
+  --allow-privileged=true \
+  --authorization-mode=Node,RBAC \
+  --enable-admission-plugins=NodeRestriction \
+  --service-cluster-ip-range=10.96.0.0/16 \
+  --service-node-port-range=30000-32767 \
+  --etcd-servers=https://192.168.88.91:2379,https://192.168.88.92:2379,https://192.168.88.93:2379 \
+  --etcd-cafile=/etc/kubernetes/ssl/ca.pem \
+  --etcd-certfile=/etc/kubernetes/ssl/etcd.pem \
+  --etcd-keyfile=/etc/kubernetes/ssl/etcd-key.pem \
+  --client-ca-file=/etc/kubernetes/ssl/ca.pem \
+  --tls-cert-file=/etc/kubernetes/ssl/apiserver.pem \
+  --tls-private-key-file=/etc/kubernetes/ssl/apiserver-key.pem \
+  --service-account-key-file=/etc/kubernetes/ssl/sa.pub \
+  --service-account-signing-key-file=/etc/kubernetes/ssl/sa.key \
+  --service-account-issuer=https://kubernetes.default.svc.cluster.local \
+  --kubelet-client-certificate=/etc/kubernetes/ssl/apiserver.pem \
+  --kubelet-client-key=/etc/kubernetes/ssl/apiserver-key.pem \
+  --requestheader-client-ca-file=/etc/kubernetes/ssl/front-proxy-ca.pem \
+  --proxy-client-cert-file=/etc/kubernetes/ssl/front-proxy-client.pem \
+  --proxy-client-key-file=/etc/kubernetes/ssl/front-proxy-client-key.pem \
+  --requestheader-allowed-names=front-proxy-client \
+  --requestheader-extra-headers-prefix=X-Remote-Extra- \
+  --requestheader-group-headers=X-Remote-Group \
+  --requestheader-username-headers=X-Remote-User \
+  --enable-aggregator-routing=true \
+  --encryption-provider-config=/etc/kubernetes/encryption-config.yaml \
+  --audit-log-path=/var/log/kubernetes/audit.log \
+  --audit-log-maxage=7 \
+  --v=2
+Restart=on-failure
+RestartSec=5
+LimitNOFILE=65536
+
+[Install]
+WantedBy=multi-user.target
